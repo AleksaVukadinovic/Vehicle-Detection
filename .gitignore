@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+outputs/
+data/
+.DS_Store
+*.egg-info/
+dist/
+build/
+.idea/
+.vscode/
+output_*.png
