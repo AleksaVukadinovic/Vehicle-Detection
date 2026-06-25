@@ -1,111 +1,152 @@
-# Vehicle-Detection
+# Detekcija vozila pomoću KNM (PyTorch)
 
-Project done as part of "Computational Intelligence" course at 4th year at Faculty of Mathematics, University of Belgrade.
+Konvoluciona neuronska mreža (KNM) za **detekciju vozila**, napravljena pomoću
+PyTorch-a. Model vrši binarnu klasifikaciju — *vozilo* naspram *nije vozilo* — i
+trenira se na velikom skupu podataka
+[CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) (60.000 slika), koji se
+automatski preuzima pri prvom pokretanju.
 
-## Overview
+Klase skupa CIFAR-10 preslikane su u binarni cilj:
 
-A **multi-object Vehicle Detection System** implemented **from scratch** using TensorFlow/Keras — no pre-trained models or high-level detection libraries (no YOLO/SSD/ResNet imports).
+| Cilj | Klase CIFAR-10 |
+|------|----------------|
+| **1 — vozilo** | avion, automobil, brod, kamion |
+| **0 — nije vozilo** | ptica, mačka, jelen, pas, žaba, konj |
 
-The system uses a YOLO-v1-inspired grid-based architecture:
-- **Custom CNN backbone** — 6 convolutional blocks trained from scratch
-- **Grid-based detection** — divides the image into a 7×7 grid; each cell predicts 2 bounding boxes + class probabilities
-- **Non-Maximum Suppression** — filters overlapping detections at inference
+## Arhitektura
 
-Trained on **PASCAL VOC 2007** (automatically downloaded on first run), detecting 7 vehicle classes:
-`aeroplane`, `bicycle`, `boat`, `bus`, `car`, `motorbike`, `train`
+Kompaktna KNM u stilu VGG (`src/model.py`):
 
-## Project Structure
+- 3 konvoluciona bloka (svaki: 2× 3×3 konv → BatchNorm → ReLU → MaxPool)
+- Progresija kanala 3 → 64 → 128 → 256
+- Globalno usrednjeno objedinjavanje + klasifikaciona glava sa 2 sloja i dropout-om
+- Kaiming inicijalizacija težina
 
-| File | Description |
-|---|---|
-| `dataset.py` | PASCAL VOC 2007 download, parsing, grid target encoding, `tf.data` pipeline |
-| `model.py` | Custom CNN backbone with grid-based detection head |
-| `train.py` | Custom training loop with `tf.GradientTape` and YOLO-style multi-component loss |
-| `utils.py` | Grid decoding, NMS, bounding box drawing, image annotation |
-| `inference.py` | CLI tool — takes an image, outputs it with all vehicles detected |
-| `run.sh` | Convenience script for training and inference |
+Mreža se automatski izvršava na **CUDA**, **Apple MPS** ili **procesoru (CPU)**
+(izbor u `src/config.py`).
 
-## Setup
+## Rezultati
+
+Performanse na test skupu (10.000 slika) za zadatak binarne detekcije vozila,
+poređenje KNM sa dve samostalno razvijene referentne metode na sirovim pikselima:
+
+| Model | Tačnost | Preciznost | Odziv | F1 | ROC-AUC |
+|-------|:-------:|:----------:|:-----:|:--:|:-------:|
+| Logistička regresija | 0,816 | 0,791 | 0,733 | 0,761 | 0,879 |
+| MLP (bez konvolucija) | 0,880 | 0,854 | 0,845 | 0,850 | 0,943 |
+| **VehicleCNN (naše)** | **0,973** | **0,969** | **0,963** | **0,966** | **0,997** |
+
+Konvoluciona arhitektura je presudni činilac: poboljšava tačnost za ~9
+procentnih poena u odnosu na nelinearni MLP uporedive složenosti.
+
+## Struktura projekta
+
+```
+.
+├── src/
+│   ├── config.py      # Hiperparametri, putanje, izbor uređaja
+│   ├── dataset.py     # Učitavanje CIFAR-10 + binarno preslikavanje oznaka
+│   ├── model.py       # Arhitektura VehicleCNN
+│   └── engine.py      # Petlje za treniranje / evaluaciju
+├── train.py           # Ulazna tačka za treniranje
+├── baselines.py       # Referentne metode: logistička regresija i MLP (scikit-learn)
+├── evaluate.py        # Mere, grafici, tabela poređenja
+├── predict.py         # Inferencija na sopstvenim slikama
+├── docs/              # LaTeX dokumentacija i prezentacija (+ references.bib)
+├── reports/           # Generisane slike i tabele rezultata (JSON)
+├── DATASET.md         # Izvor skupa podataka, atribucija, preslikavanje oznaka
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+## Podešavanje okruženja
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+# Kreiranje i aktiviranje virtuelnog okruženja (Python 3.11)
+python3.11 -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+
+# Instalacija zavisnosti
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Training
+## Treniranje
 
 ```bash
-./run.sh train --epochs 50 --batch_size 16 --lr 0.0001
+python train.py --epochs 20 --batch-size 128 --lr 1e-3
 ```
 
-Or directly:
-```bash
-python train.py --epochs 50 --batch_size 16 --lr 0.0001
-```
+Dostupne opcije: `--epochs`, `--batch-size`, `--lr`, `--weight-decay`,
+`--num-workers`, `--seed`.
 
-On first run, the PASCAL VOC 2007 dataset (~450 MB) is automatically downloaded and cached in `data/`.
+Tokom treniranja skup podataka se automatski preuzima u `data/`. Najbolji model
+(po validacionoj tačnosti) čuva se u `checkpoints/best_model.pt`, a dnevnik
+treniranja u `checkpoints/history.json`. Na kraju se ispisuje završna evaluacija
+na izdvojenom test skupu.
 
-### Training hyperparameters
+## Inferencija
 
-| Flag | Default | Description |
-|---|---|---|
-| `--epochs` | 50 | Number of training epochs |
-| `--batch_size` | 16 | Mini-batch size |
-| `--lr` | 0.0001 | Adam learning rate (with cosine decay) |
-| `--save_dir` | `outputs/` | Directory for weights and plots |
-
-## Inference
-
-Detect vehicles in any image:
+Klasifikacija sopstvenih slika kao vozilo / nije vozilo:
 
 ```bash
-./run.sh detect path/to/image.jpg --output result.png
+python predict.py --image putanja/do/slike.jpg
+python predict.py --image auto.jpg pas.jpg --checkpoint checkpoints/best_model.pt
 ```
 
-Or directly:
+Primer izlaza:
+
+```
+auto.jpg: VEHICLE (vehicle probability = 98.42%)
+pas.jpg: NOT A VEHICLE (vehicle probability = 3.11%)
+```
+
+## Reprodukcija eksperimenata i slika
+
 ```bash
-python inference.py path/to/image.jpg --output result.png --conf 0.3 --iou 0.4
+python train.py --epochs 20 --num-workers 0   # treniranje KNM
+python baselines.py                            # treniranje logističke regresije + MLP
+python evaluate.py                             # generisanje slika + tabele poređenja
 ```
 
-This outputs the input image with bounding boxes and labels drawn on all detected vehicles.
+Ovo popunjava `reports/figures/` (krive treniranja, matrica konfuzije, ROC/PR
+krive, primeri predviđanja) i `reports/comparison.json`.
 
-## Method
+## Dokumentacija i prezentacija
 
-### Architecture
+Naučni izveštaj i prezentacija za odbranu pisani su u LaTeX-u u direktorijumu
+`docs/`. Kompajliranje (zahteva LaTeX distribuciju):
 
-The model is a single-shot grid-based detector (inspired by YOLO v1):
-
-```
-Input (448×448×3)
-    → CNN Backbone (6 Conv blocks: Conv→BN→LeakyReLU→MaxPool)
-    → 7×7 spatial feature map
-    → 1×1 Conv detection head
-    → Output: (7, 7, 17)  [2 boxes × 5 values + 7 classes]
+```bash
+cd docs
+pdflatex documentation.tex && bibtex documentation && pdflatex documentation.tex && pdflatex documentation.tex
+pdflatex presentation.tex
 ```
 
-Each of the 49 grid cells predicts:
-- **2 bounding boxes**, each with 5 values: `(x, y, w, h, confidence)`
-- **7 class probabilities** (one per vehicle type)
+- `docs/documentation.tex` — kompletan izveštaj (uvod i pregled literature,
+  metoda, eksperimenti, zaključak, reference).
+- `docs/presentation.tex` — prezentacija za odbranu od 15 slajdova (Beamer).
+- `docs/references.bib` — bibliografija (recenzirani radovi i knjige).
 
-### Loss Function
+Dokumenti uključuju slike iz `reports/figures/`, pa pre kompajliranja pokrenite
+`evaluate.py`.
 
-The YOLO-style multi-component loss:
+## Skup podataka
 
-$$L = \lambda_{coord} \cdot L_{xy} + \lambda_{coord} \cdot L_{wh} + L_{conf}^{obj} + \lambda_{noobj} \cdot L_{conf}^{noobj} + L_{class}$$
+Pogledajte [`DATASET.md`](DATASET.md) za izvor skupa podataka, atribuciju i
+binarno preslikavanje oznaka. Skup podataka automatski preuzima torchvision.
 
-| Component | Purpose | Weight |
-|---|---|---|
-| $L_{xy}$ | Centre coordinate error | λ_coord = 5.0 |
-| $L_{wh}$ | Size error (sqrt scale for small-object sensitivity) | λ_coord = 5.0 |
-| $L_{conf}^{obj}$ | Confidence for cells with objects | 1.0 |
-| $L_{conf}^{noobj}$ | Confidence for empty cells (down-weighted) | λ_noobj = 0.5 |
-| $L_{class}$ | Classification error | 1.0 |
+## Tuđi kod
 
-### Key Design Decisions
+Sav izvorni kod je originalan. Korišćenje tuđeg koda ograničeno je na
+standardne, dokumentovane API-je biblioteka: PyTorch, torchvision, scikit-learn,
+Matplotlib, NumPy. Dizajn u stilu VGG i recept za treniranje prate uobičajenu
+praksu iz citirane literature (videti `docs/documentation.tex`).
 
-- **sqrt(w), sqrt(h)** in the size loss — penalises errors in small objects more heavily
-- **λ_noobj = 0.5** — prevents the vast majority of empty cells from dominating training
-- **LeakyReLU (α=0.1)** — avoids dying neurons in cells with no objects
-- **Responsible box selection** — only the predicted box with highest IoU against ground truth receives coordinate gradients
-- **NMS at inference** — greedily removes overlapping detections per class
+## Napomene
+
+- Direktorijumi `data/` i `checkpoints/` su isključeni iz git-a (`.gitignore`).
+- Za najbolju brzinu koristite CUDA GPU; Apple Silicon automatski koristi MPS.
+- Na CPU/MPS, postavite `--num-workers 0` ako naiđete na probleme sa
+  višeprocesnošću.
