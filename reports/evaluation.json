@@ -1,0 +1,9 @@
+{
+  "model": "VehicleCNN (ours)",
+  "accuracy": 0.9727,
+  "precision": 0.9685692733215991,
+  "recall": 0.963,
+  "f1": 0.9657766077472734,
+  "roc_auc": 0.9965229583333334,
+  "n_params": 1180354
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "model": "Logistic Regression",
+    "accuracy": 0.8156,
+    "precision": 0.7905660377358491,
+    "recall": 0.73325,
+    "f1": 0.7608300907911802,
+    "roc_auc": 0.8790449791666667,
+    "train_time_s": 1.5
+  },
+  {
+    "model": "MLP (no conv)",
+    "accuracy": 0.8804,
+    "precision": 0.8542193026781203,
+    "recall": 0.84525,
+    "f1": 0.8497109826589595,
+    "roc_auc": 0.9433718750000001,
+    "train_time_s": 8.3
+  }
+]
