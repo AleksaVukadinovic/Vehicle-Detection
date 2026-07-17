@@ -1,8 +1,5 @@
-"""Central configuration for the vehicle detection project."""
-
 from dataclasses import dataclass, field
 from pathlib import Path
-
 import torch
 
 # CIFAR-10 class indices that correspond to vehicles.
@@ -37,8 +34,6 @@ def get_device() -> torch.device:
 
 @dataclass
 class TrainConfig:
-    """Hyper-parameters and paths used for training."""
-
     data_dir: Path = PROJECT_ROOT / "data"
     checkpoint_dir: Path = PROJECT_ROOT / "checkpoints"
 

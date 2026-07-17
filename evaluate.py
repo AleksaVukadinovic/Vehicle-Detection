@@ -1,24 +1,7 @@
-"""Evaluate the trained CNN and generate all figures/tables for the report.
-
-Produces (under reports/figures/ and reports/):
-  - training_curves.png   : loss & accuracy vs epoch
-  - confusion_matrix.png  : test-set confusion matrix
-  - roc_curve.png         : ROC curve with AUC
-  - pr_curve.png          : precision-recall curve
-  - sample_predictions.png: visualized predictions on simple test cases
-  - evaluation.json       : CNN metrics
-  - comparison.json       : merged CNN + baseline comparison table
-
-Run train.py (and optionally baselines.py) first.
-"""
-
 from __future__ import annotations
-
 import json
 from pathlib import Path
-
 import matplotlib
-
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -167,19 +150,16 @@ def main() -> None:
     device = get_device()
     print(f"Device: {device}")
 
-    # Load training history.
     history_path = cfg.checkpoint_dir / "history.json"
     with open(history_path) as f:
         hist_data = json.load(f)
     history = hist_data["history"]
 
-    # Load model.
     ckpt_path = cfg.checkpoint_dir / "best_model.pt"
     ckpt = torch.load(ckpt_path, map_location=device)
     model = build_model(num_classes=2).to(device)
     model.load_state_dict(ckpt["model_state"])
 
-    # Collect predictions on the test set.
     _, _, test_loader = get_dataloaders(cfg)
     print("Collecting CNN predictions on the test set...")
     y_true, y_pred, y_prob = collect_predictions(model, test_loader, device, desc="test")
@@ -197,7 +177,6 @@ def main() -> None:
     for k, v in cnn_metrics.items():
         print(f"  {k}: {v}")
 
-    # Generate figures.
     print("Generating figures...")
     plot_training_curves(history, FIG_DIR / "training_curves.png")
     plot_confusion_matrix(y_true, y_pred, FIG_DIR / "confusion_matrix.png")
@@ -208,7 +187,6 @@ def main() -> None:
     with open(REPORTS_DIR / "evaluation.json", "w") as f:
         json.dump(cnn_metrics, f, indent=2)
 
-    # Merge with baselines if available.
     comparison = [cnn_metrics]
     baseline_path = cfg.checkpoint_dir / "baseline_results.json"
     if baseline_path.exists():

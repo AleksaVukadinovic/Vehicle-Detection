@@ -1,17 +1,10 @@
 # Detekcija vozila pomoću KNM (PyTorch)
 
 Konvoluciona neuronska mreža (KNM) za **detekciju vozila**, napravljena pomoću
-PyTorch-a. Model vrši binarnu klasifikaciju — *vozilo* naspram *nije vozilo* — i
+PyTorch-a. Model vrši binarnu klasifikaciju - *vozilo* naspram *nije vozilo* - i
 trenira se na velikom skupu podataka
 [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) (60.000 slika), koji se
 automatski preuzima pri prvom pokretanju.
-
-Klase skupa CIFAR-10 preslikane su u binarni cilj:
-
-| Cilj | Klase CIFAR-10 |
-|------|----------------|
-| **1 — vozilo** | avion, automobil, brod, kamion |
-| **0 — nije vozilo** | ptica, mačka, jelen, pas, žaba, konj |
 
 ## Arhitektura
 
@@ -36,29 +29,8 @@ poređenje KNM sa dve samostalno razvijene referentne metode na sirovim pikselim
 | MLP (bez konvolucija) | 0,880 | 0,854 | 0,845 | 0,850 | 0,943 |
 | **VehicleCNN (naše)** | **0,973** | **0,969** | **0,963** | **0,966** | **0,997** |
 
-Konvoluciona arhitektura je presudni činilac: poboljšava tačnost za ~9
+Konvoluciona arhitektura je najbolja: poboljšava tačnost za ~9
 procentnih poena u odnosu na nelinearni MLP uporedive složenosti.
-
-## Struktura projekta
-
-```
-.
-├── src/
-│   ├── config.py      # Hiperparametri, putanje, izbor uređaja
-│   ├── dataset.py     # Učitavanje CIFAR-10 + binarno preslikavanje oznaka
-│   ├── model.py       # Arhitektura VehicleCNN
-│   └── engine.py      # Petlje za treniranje / evaluaciju
-├── train.py           # Ulazna tačka za treniranje
-├── baselines.py       # Referentne metode: logistička regresija i MLP (scikit-learn)
-├── evaluate.py        # Mere, grafici, tabela poređenja
-├── predict.py         # Inferencija na sopstvenim slikama
-├── docs/              # LaTeX dokumentacija i prezentacija (+ references.bib)
-├── reports/           # Generisane slike i tabele rezultata (JSON)
-├── DATASET.md         # Izvor skupa podataka, atribucija, preslikavanje oznaka
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
 
 ## Podešavanje okruženja
 
@@ -137,16 +109,8 @@ Dokumenti uključuju slike iz `reports/figures/`, pa pre kompajliranja pokrenite
 Pogledajte [`DATASET.md`](DATASET.md) za izvor skupa podataka, atribuciju i
 binarno preslikavanje oznaka. Skup podataka automatski preuzima torchvision.
 
-## Tuđi kod
-
-Sav izvorni kod je originalan. Korišćenje tuđeg koda ograničeno je na
-standardne, dokumentovane API-je biblioteka: PyTorch, torchvision, scikit-learn,
-Matplotlib, NumPy. Dizajn u stilu VGG i recept za treniranje prate uobičajenu
-praksu iz citirane literature (videti `docs/documentation.tex`).
-
 ## Napomene
 
 - Direktorijumi `data/` i `checkpoints/` su isključeni iz git-a (`.gitignore`).
 - Za najbolju brzinu koristite CUDA GPU; Apple Silicon automatski koristi MPS.
-- Na CPU/MPS, postavite `--num-workers 0` ako naiđete na probleme sa
-  višeprocesnošću.
+- Na CPU/MPS, postavite `--num-workers 0` ako naiđete na probleme pri treniranju

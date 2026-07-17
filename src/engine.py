@@ -1,9 +1,5 @@
-"""Training and evaluation loops."""
-
 from __future__ import annotations
-
 import os
-
 import numpy as np
 import torch
 import torch.nn as nn
@@ -84,12 +80,6 @@ def collect_predictions(
     device: torch.device,
     desc: str = "predict",
 ):
-    """Run the model over a loader and collect raw outputs.
-
-    Returns:
-        (y_true, y_pred, y_prob) as numpy arrays, where y_prob is the
-        probability assigned to the positive (vehicle) class.
-    """
     model.eval()
     all_true, all_pred, all_prob = [], [], []
     for images, targets in tqdm(loader, desc=f"[{desc}]", leave=False, disable=_DISABLE_TQDM):

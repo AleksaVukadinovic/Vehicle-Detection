@@ -1,23 +1,12 @@
-"""Dataset loading for vehicle detection.
-
-Uses the CIFAR-10 dataset (60,000 32x32 colour images across 10 classes),
-downloaded automatically via torchvision. Labels are re-mapped to a binary
-target: 1 = vehicle (airplane, automobile, ship, truck), 0 = non-vehicle.
-"""
-
 from __future__ import annotations
-
 import numpy as np
 import torch
 from torch.utils.data import DataLoader, Dataset, random_split
 from torchvision import datasets, transforms
-
 from .config import VEHICLE_CLASS_INDICES, TrainConfig
 
-
+# just a wrapper, converts labels to 1/0 depending if the image is vehicle or no
 class VehicleBinaryDataset(Dataset):
-    """Wraps a CIFAR-10 dataset and converts labels to vehicle/non-vehicle."""
-
     def __init__(self, base: Dataset) -> None:
         self.base = base
 
@@ -108,19 +97,10 @@ def get_dataloaders(cfg: TrainConfig):
 
 
 def get_numpy_arrays(cfg: TrainConfig):
-    """Return flat numpy arrays for the classical (sklearn) baselines.
-
-    Images are scaled to [0, 1] and flattened to length-3072 vectors. Labels
-    are the binary vehicle/non-vehicle targets.
-
-    Returns:
-        (X_train, y_train, X_test, y_test)
-    """
     train_raw = datasets.CIFAR10(root=str(cfg.data_dir), train=True, download=True)
     test_raw = datasets.CIFAR10(root=str(cfg.data_dir), train=False, download=True)
 
     def to_xy(ds):
-        # ds.data: uint8 array of shape (N, 32, 32, 3)
         x = ds.data.astype(np.float32).reshape(len(ds), -1) / 255.0
         y = np.array(
             [1 if lab in VEHICLE_CLASS_INDICES else 0 for lab in ds.targets],

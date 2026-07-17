@@ -1,22 +1,6 @@
-"""Train classical baseline classifiers for scientific comparison.
-
-These simpler, self-developed methods provide a reference point against which
-the CNN is compared (as permitted by the project guidelines). Two baselines
-are trained on raw, flattened pixel vectors:
-
-  1. Logistic Regression  - a linear classifier.
-  2. Multi-Layer Perceptron - a fully-connected network with NO convolutions,
-     which isolates the contribution of the convolutional architecture.
-
-Results (accuracy, precision, recall, F1, ROC-AUC) are written to
-checkpoints/baseline_results.json for use by the evaluation/report scripts.
-"""
-
 from __future__ import annotations
-
 import json
 import time
-
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     accuracy_score,
@@ -27,7 +11,6 @@ from sklearn.metrics import (
 )
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
-
 from src.config import TrainConfig
 from src.dataset import get_numpy_arrays
 

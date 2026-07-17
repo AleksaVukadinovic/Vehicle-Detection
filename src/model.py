@@ -1,18 +1,9 @@
-"""CNN architecture for vehicle detection.
-
-A compact VGG-style convolutional network with batch normalization,
-designed for 32x32 RGB inputs and binary classification.
-"""
-
 from __future__ import annotations
-
 import torch
 import torch.nn as nn
 
 
 class ConvBlock(nn.Module):
-    """Two 3x3 conv layers followed by batch norm, ReLU, and max pooling."""
-
     def __init__(self, in_channels: int, out_channels: int) -> None:
         super().__init__()
         self.block = nn.Sequential(
@@ -30,8 +21,6 @@ class ConvBlock(nn.Module):
 
 
 class VehicleCNN(nn.Module):
-    """VGG-style CNN for binary vehicle classification on 32x32 images."""
-
     def __init__(self, num_classes: int = 2, dropout: float = 0.5) -> None:
         super().__init__()
         self.features = nn.Sequential(

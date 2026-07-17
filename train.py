@@ -1,19 +1,10 @@
-"""Entry point for training the vehicle detection CNN.
-
-Example:
-    python train.py --epochs 20 --batch-size 128 --lr 1e-3
-"""
-
 from __future__ import annotations
-
 import argparse
 import json
 import time
 from pathlib import Path
-
 import torch
 import torch.nn as nn
-
 from src.config import TrainConfig
 from src.dataset import get_dataloaders
 from src.engine import evaluate, train_one_epoch
@@ -112,7 +103,6 @@ def main() -> None:
             )
             print(f"  -> Saved new best model (val_acc={val_acc:.4f})")
 
-    # Final test evaluation using the best checkpoint.
     print("\nLoading best model for final test evaluation...")
     ckpt = torch.load(best_path, map_location=cfg.device)
     model.load_state_dict(ckpt["model_state"])

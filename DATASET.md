@@ -20,7 +20,7 @@ Skup podataka se **automatski preuzima** tokom izvršavanja pomoću biblioteke
 direktorijum `data/` pri prvom pokretanju skripti `train.py`, `baselines.py`
 ili `evaluate.py`. Direktorijum `data/` je isključen iz git-a, pa je skup
 podataka *adresiran* (povezan i automatski preuzet) umesto da bude smešten u
-repozitorijum, što je u skladu sa uputstvom za projekat.
+repozitorijum.
 
 ## Preslikavanje oznaka za detekciju vozila
 
