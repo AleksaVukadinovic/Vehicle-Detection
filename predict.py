@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""Run vehicle detection inference on one or more images.
-
-Example:
+"""
+Usage example:
     python predict.py --image path/to/car.jpg
     python predict.py --image a.jpg b.jpg --checkpoint checkpoints/best_model.pt
 """
