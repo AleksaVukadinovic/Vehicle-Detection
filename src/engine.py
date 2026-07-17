@@ -18,7 +18,6 @@ def train_one_epoch(
     device: torch.device,
     epoch: int,
 ) -> tuple[float, float]:
-    """Run one training epoch. Returns (avg_loss, accuracy)."""
     model.train()
     running_loss = 0.0
     correct = 0

@@ -53,7 +53,6 @@ def get_dataloaders(cfg: TrainConfig):
         root=str(cfg.data_dir), train=False, download=True, transform=eval_tf
     )
 
-    # Split the training set into train / validation.
     val_size = int(len(full_train) * cfg.val_split)
     train_size = len(full_train) - val_size
     generator = torch.Generator().manual_seed(cfg.seed)
@@ -61,7 +60,6 @@ def get_dataloaders(cfg: TrainConfig):
         full_train, [train_size, val_size], generator=generator
     )
 
-    # The validation split should use eval transforms (no augmentation).
     val_base = datasets.CIFAR10(
         root=str(cfg.data_dir), train=True, download=False, transform=eval_tf
     )
