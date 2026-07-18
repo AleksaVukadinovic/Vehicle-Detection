@@ -30,15 +30,15 @@ class DetectionConfig:
     negative_iou: float = 0.4
     neg_pos_ratio: int = 3
 
-    score_threshold: float = 0.3
-    nms_iou: float = 0.45
+    score_threshold: float = 0.5
+    nms_iou: float = 0.35
 
     batch_size: int = 16
     num_workers: int = 0
-    epochs: int = 30
+    epochs: int = 80
     learning_rate: float = 1e-3
     weight_decay: float = 1e-4
-    max_train_images: int = 1500
+    max_train_images: int = 5000
     val_split: float = 0.1
     seed: int = 42
 

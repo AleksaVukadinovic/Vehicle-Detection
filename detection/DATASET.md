@@ -13,14 +13,17 @@ CIFAR-10 skupa korišćenog za referentni klasifikacioni model.
 - **Referenca:** M. Everingham i dr., *The PASCAL Visual Object Classes (VOC)
   Challenge*, International Journal of Computer Vision, 88(2), 303–338, 2010.
 
-VOC2007 (trainval) sadrži 5.011 slika sa 20 klasa objekata; svaki objekat je
-anotiran okvirom u XML formatu.
+Koriste se obe particije skupa: *trainval* (5.011 slika) i *test* (4.952
+slike), ukupno 9.963 slike sa 20 klasa objekata; svaki objekat je anotiran
+okvirom u XML formatu. Pošto se model ne poredi sa zvaničnim VOC rezultatima,
+obe particije se spajaju u jedinstven fond iz kog se izdvaja sopstveni
+validacioni skup.
 
 ## Način pribavljanja
 
-Skup podataka se **automatski preuzima** (~440 MB) i raspakuje u lokalni
-direktorijum `data/` pri prvom pokretanju `train.py` (`src/dataset.py`,
-funkcija `ensure_voc`, sa rezervnim mirror serverom). Direktorijum `data/` je
+Skup podataka se **automatski preuzima** (dve arhive, ukupno ~870 MB) i
+raspakuje u lokalni direktorijum `data/` pri prvom pokretanju `train.py`
+(`src/dataset.py`, funkcija `ensure_voc`, sa rezervnim mirror serverom). Direktorijum `data/` je
 isključen iz git-a, pa je skup podataka adresiran umesto da bude smešten u
 repozitorijum.
 
@@ -34,7 +37,7 @@ klasu **„vozilo"**:
 | vozilo | aeroplane, bicycle, boat, bus, car, motorbike, train |
 
 Koriste se samo slike koje sadrže bar jedno vozilo (objekti označeni kao
-*difficult* se preskaču), a od njih se za demo treniranje uzima podskup
-(podrazumevano 500 slika, opcija `--max-images`). Preslikavanje je
+*difficult* se preskaču), a broj slika za treniranje ograničava se opcijom
+`--max-images`. Preslikavanje je
 implementirano u `src/config.py` (`VEHICLE_CLASSES`) i `src/dataset.py`
 (`parse_vehicle_boxes`).

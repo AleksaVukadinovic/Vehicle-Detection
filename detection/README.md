@@ -8,12 +8,11 @@ pouzdanosti.
 Model se trenira na skupu [Pascal VOC 2007](DATASET.md) (klase vozila), koji se
 automatski preuzima pri prvom pokretanju.
 
-> **Napomena o obimu treniranja:** cilj projekta je demonstracija arhitekture i
-> tehnike detekcije objekata, a ne vrhunske performanse. Podrazumevano se
-> trenira kratak demo (podskup od 1.500 slika, 30 epoha, nekoliko minuta na
-> GPU/MPS), pa su detekcije orijentacione, a ocene pouzdanosti niske
-> (podrazumevani prag je 0,3). Za bolje rezultate povećati `--max-images` i
-> `--epochs`.
+> **Napomena o obimu treniranja:** cilj projekta je demonstracija arhitekture
+> i tehnike detekcije objekata, a ne takmičenje sa velikim detektorima.
+> Priloženi model (`checkpoints/best_detector.pt`) treniran je podrazumevanim
+> podešavanjima: sve slike vozila iz VOC2007 (~3.800), 80 epoha, oko sat
+> vremena na Apple MPS uređaju.
 
 ## Arhitektura
 
@@ -38,6 +37,10 @@ kutijama:
 - **Uparivanje** (`src/anchors.py`): anchor kutija je pozitivna ako joj je
   IoU sa nekim stvarnim okvirom ≥ 0,5 (najbolja kutija za svaki objekat je
   uvek pozitivna), negativna ako je IoU < 0,4, a između se ignoriše.
+- **Augmentacija podataka** (`src/dataset.py`): nasumično horizontalno
+  ogledanje, kolor džiter i nasumično proširenje platna (zoom-out) sa
+  odgovarajućim preračunavanjem okvira; uz dropout u detekcionoj glavi
+  drži preprilagođavanje pod kontrolom tokom dužeg treniranja.
 - **Funkcija gubitka** (`src/loss.py`): binarna unakrsna entropija za
   objectness sa *hard negative mining* (odnos negativnih i pozitivnih 3:1,
   kao kod SSD-a) + smooth L1 za regresiju pomeraja na pozitivnim kutijama.
@@ -48,8 +51,8 @@ kutijama:
 ## Treniranje
 
 ```bash
-python train.py                        # demo: 1500 slika, 30 epoha
-python train.py --epochs 60 --max-images 5000 --lr 1e-3
+python train.py                        # sve slike vozila, 80 epoha (~1h na GPU/MPS)
+python train.py --epochs 15 --max-images 500   # brzi demo, nekoliko minuta
 ```
 
 Dostupne opcije: `--epochs`, `--batch-size`, `--lr`, `--weight-decay`,
@@ -63,7 +66,7 @@ treniranja u `checkpoints/history.json`.
 
 ```bash
 python detect.py --image ulica.jpg
-python detect.py --image a.jpg b.jpg --score-threshold 0.4
+python detect.py --image a.jpg b.jpg --score-threshold 0.7
 ```
 
 Za svaku ulaznu sliku snima se kopija sa nacrtanim okvirima u
@@ -71,8 +74,8 @@ Za svaku ulaznu sliku snima se kopija sa nacrtanim okvirima u
 
 ```
 ulica.jpg: 2 vehicle(s) detected -> outputs/ulica_detected.jpg
-  box=(135, 129, 421, 263) score=31.84%
-  box=(220, 211, 343, 263) score=30.60%
+  box=(48, 121, 347, 230) score=99.24%
+  box=(118, 101, 369, 181) score=86.09%
 ```
 
 ## Skup podataka

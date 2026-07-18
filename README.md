@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 ```bash
 cd detection
-python train.py                       # kratko demo treniranje (VOC2007 se sam preuzima)
+python train.py                      
 python detect.py --image ulica.jpg    # snima outputs/ulica_detected.jpg sa okvirima
 ```
 

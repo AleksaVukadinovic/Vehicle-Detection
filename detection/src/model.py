@@ -36,6 +36,7 @@ class VehicleDetector(nn.Module):
         self.head = nn.Sequential(
             nn.Conv2d(256, 256, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
+            nn.Dropout2d(0.2),
         )
         self.objectness = nn.Conv2d(256, self.num_anchors, kernel_size=1)
         self.regression = nn.Conv2d(256, self.num_anchors * 4, kernel_size=1)

@@ -13,11 +13,11 @@ from src.model import build_model
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Train single-stage vehicle detector")
-    parser.add_argument("--epochs", type=int, default=30)
+    parser.add_argument("--epochs", type=int, default=80)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
-    parser.add_argument("--max-images", type=int, default=1500)
+    parser.add_argument("--max-images", type=int, default=5000)
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--seed", type=int, default=42)
     return parser.parse_args()
