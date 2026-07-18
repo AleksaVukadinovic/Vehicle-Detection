@@ -1,0 +1,15 @@
+{
+  "ap50": 0.5219445267532963,
+  "score_threshold": 0.5,
+  "at_threshold": {
+    "precision": 0.680952380952381,
+    "recall": 0.47906197654941374,
+    "f1": 0.5624385447394297,
+    "tp": 286,
+    "fp": 134
+  },
+  "total_gt": 597,
+  "num_val_images": 378,
+  "best_epoch": 56,
+  "best_val_loss": 1.927058180173238
+}
