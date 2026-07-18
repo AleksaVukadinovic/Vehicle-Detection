@@ -2,7 +2,7 @@
 
 Jednostepeni (single-stage) detektor objekata u stilu SSD/YOLO arhitektura,
 izgrađen od nule u PyTorch-u. Za datu ulaznu sliku model vraća kopiju slike sa
-**uokvirenim vozilima** — svaki pronađeni objekat dobija pravougaonik i ocenu
+**uokvirenim vozilima** - svaki pronađeni objekat dobija pravougaonik i ocenu
 pouzdanosti.
 
 Model se trenira na skupu [Pascal VOC 2007](DATASET.md) (klase vozila), koji se
@@ -19,16 +19,16 @@ automatski preuzima pri prvom pokretanju.
 Detektor (`src/model.py`) prati standardnu jednostepenu šemu sa anchor
 kutijama:
 
-1. **Backbone** — 4 konvoluciona bloka (2× 3×3 konv → BatchNorm → ReLU, prva
+1. **Backbone** - 4 konvoluciona bloka (2× 3×3 konv → BatchNorm → ReLU, prva
    tri sa MaxPool), progresija kanala 3 → 32 → 64 → 128 → 256. Ulaz 128×128
    se svodi na mapu odlika 16×16 (korak 8 piksela).
-2. **Detekciona glava** — zajednički 3×3 konvolucioni sloj, pa dve paralelne
+2. **Detekciona glava** - zajednički 3×3 konvolucioni sloj, pa dve paralelne
    1×1 konvolucije:
    - *objectness* grana: po jedna ocena za svaku anchor kutiju (da li kutija
      sadrži vozilo),
    - *regresiona* grana: 4 pomeraja (Δx, Δy, Δw, Δh) kojima se anchor kutija
      deformiše u tačan okvir objekta.
-3. **Anchor kutije** (`src/anchors.py`) — u svakoj od 16×16 ćelija mreže
+3. **Anchor kutije** (`src/anchors.py`) - u svakoj od 16×16 ćelija mreže
    generiše se 9 kutija (3 skale × 3 odnosa stranica), ukupno 2304 kandidata
    po slici.
 
@@ -62,7 +62,7 @@ VOC2007 se automatski preuzima u `data/` pri prvom pokretanju. Najbolji model
 (po validacionom gubitku) čuva se u `checkpoints/best_detector.pt`, a dnevnik
 treniranja u `checkpoints/history.json`.
 
-## Inferencija — uokvirivanje vozila
+## Inferencija - uokvirivanje vozila
 
 ```bash
 python detect.py --image ulica.jpg

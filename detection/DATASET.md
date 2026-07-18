@@ -1,7 +1,7 @@
 # Skup podataka
 
 Detektor se trenira na skupu **Pascal VOC 2007**, koji pored oznaka klasa
-sadrži i **anotacije okvira** (bounding box) za svaki objekat — za razliku od
+sadrži i **anotacije okvira** (bounding box) za svaki objekat - za razliku od
 CIFAR-10 skupa korišćenog za referentni klasifikacioni model.
 
 ## Izvor i atribucija

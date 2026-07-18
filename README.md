@@ -11,7 +11,7 @@ direktorijumima:
 | [`classification/`](classification/) | KNM binarni klasifikator (referentni model) | Klasifikacija: vozilo / nije vozilo, bez lokalizacije | CIFAR-10 |
 
 Klasifikacioni model je zadržan kao dodatni referentni (baseline) model za
-poređenje — pokazuje šta konvoluciona mreža može bez detekcione glave, dok
+poređenje - pokazuje šta konvoluciona mreža može bez detekcione glave, dok
 glavni model u `detection/` rešava zadatak lokalizacije okvira.
 
 ## Podešavanje okruženja
@@ -26,7 +26,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Brzi početak — detekcija vozila
+## Brzi početak - detekcija vozila
 
 ```bash
 cd detection
@@ -51,8 +51,8 @@ Detalji u [`classification/README.md`](classification/README.md).
 
 Naučni izveštaji i prezentacija za odbranu nalaze se u direktorijumu `docs/`:
 
-- `docs/documentation_detection.pdf` — izveštaj za glavni model (detekcija
+- `docs/documentation_detection.pdf` - izveštaj za glavni model (detekcija
   vozila sa lokalizacijom); LaTeX izvor je u `docs/documentation_detection.tex`
   i kompajlira se sa `tectonic documentation_detection.tex` (slike prethodno
   generisati pomoću `detection/evaluate.py`).
-- `docs/documentation.pdf` — izveštaj za referentni klasifikacioni model.
+- `docs/documentation.pdf` - izveštaj za referentni klasifikacioni model.

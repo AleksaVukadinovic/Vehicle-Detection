@@ -28,8 +28,8 @@ Originalnih 10 klasa preslikava se u binarni cilj:
 
 | Cilj            | Originalne klase CIFAR-10              |
 |-----------------|---------------------------------------|
-| 1 — vozilo      | avion, automobil, brod, kamion        |
-| 0 — nije vozilo | ptica, mačka, jelen, pas, žaba, konj  |
+| 1 - vozilo      | avion, automobil, brod, kamion        |
+| 0 - nije vozilo | ptica, mačka, jelen, pas, žaba, konj  |
 
 Ovo preslikavanje implementirano je u `src/config.py`
 (`VEHICLE_CLASS_INDICES`).
