@@ -49,4 +49,10 @@ Detalji u [`classification/README.md`](classification/README.md).
 
 ## Dokumentacija i prezentacija
 
-Naučni izveštaj i prezentacija za odbranu nalaze se u direktorijumu `docs/`.
+Naučni izveštaji i prezentacija za odbranu nalaze se u direktorijumu `docs/`:
+
+- `docs/documentation_detection.pdf` — izveštaj za glavni model (detekcija
+  vozila sa lokalizacijom); LaTeX izvor je u `docs/documentation_detection.tex`
+  i kompajlira se sa `tectonic documentation_detection.tex` (slike prethodno
+  generisati pomoću `detection/evaluate.py`).
+- `docs/documentation.pdf` — izveštaj za referentni klasifikacioni model.

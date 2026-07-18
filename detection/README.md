@@ -78,6 +78,16 @@ ulica.jpg: 2 vehicle(s) detected -> outputs/ulica_detected.jpg
   box=(118, 101, 369, 181) score=86.09%
 ```
 
+## Evaluacija
+
+```bash
+python evaluate.py
+```
+
+Računa AP@0.5, preciznost/odziv/F1 na radnom pragu i generiše slike za
+izveštaj (krive treniranja, kriva preciznost–odziv, primeri detekcija) u
+`reports/figures/`, a metrike u `reports/evaluation.json`.
+
 ## Skup podataka
 
 Pogledajte [`DATASET.md`](DATASET.md) za izvor skupa podataka, atribuciju i
