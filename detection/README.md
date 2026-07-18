@@ -8,12 +8,6 @@ pouzdanosti.
 Model se trenira na skupu [Pascal VOC 2007](DATASET.md) (klase vozila), koji se
 automatski preuzima pri prvom pokretanju.
 
-> **Napomena o obimu treniranja:** cilj projekta je demonstracija arhitekture
-> i tehnike detekcije objekata, a ne takmičenje sa velikim detektorima.
-> Priloženi model (`checkpoints/best_detector.pt`) treniran je podrazumevanim
-> podešavanjima: sve slike vozila iz VOC2007 (~3.800), 80 epoha, oko sat
-> vremena na Apple MPS uređaju.
-
 ## Arhitektura
 
 Detektor (`src/model.py`) prati standardnu jednostepenu šemu sa anchor
