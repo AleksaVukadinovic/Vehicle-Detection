@@ -399,21 +399,6 @@ U celini, eksperimenti potvrđuju da i kompaktan, samostalno izgrađen
 jednostepeni detektor predstavlja ispravno i praktično rešenje zadatka
 lokalizacije vozila na slici.
 
-\section*{Reproducibilnost i tuđi kod}
-\addcontentsline{toc}{section}{Reproducibilnost i tuđi kod}
-
-Sav kod je originalan i napisan od strane autora, uz izuzetak opštepoznatih
-API-ja biblioteka (PyTorch, torchvision, Matplotlib, NumPy) korišćenih na
-standardan, dokumentovan način; od gotovih detekcionih komponenti koristi se
-jedino NMS operator iz torchvision-a. Skup podataka VOC2007 preuzima se
-automatski sa zvaničnog izvora (uz rezervni mirror). Dizajn detektora sledi
-opšte principe jednostepenih arhitektura iz citirane literature (anchor
-kutije, uparivanje po IoU, izdvajanje teških negativa, smooth $L_1$
-regresija), ali je svaka komponenta implementirana samostalno. Kompletan kod,
-ovaj dokument i sve slike dostupni su u javnom GitHub repozitorijumu projekta,
-što omogućava potpunu reprodukciju prikazanih rezultata skriptama
-\texttt{train.py} i \texttt{evaluate.py}.
-
 \begin{thebibliography}{10}
 
 \bibitem{girshick2014rcnn}
